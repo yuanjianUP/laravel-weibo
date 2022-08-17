@@ -28,4 +28,17 @@ class TopicsController extends Controller
         $topic->delete();
         return response(null,204);
     }
+
+    public function index(Request $request,Topic $topic){
+        $query =  $topic->query();
+        $order = !empty($request->order) ? $request->order : "id";
+        if($categoryId = $request->category_id){
+            $query->where('category_id',$categoryId);
+        }
+        $topics = $query
+            ->with(['user','category'])
+            ->orderByDesc($order)
+            ->paginate();
+        return TopicResource::collection($topics);
+    }
 }
