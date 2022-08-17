@@ -23,4 +23,7 @@ class TopicPolicy
     public function update(User $currenUser,Topic $topic){
         return $currenUser->id === $topic->user_id;
     }
+    public function destroy(User $currenUser,Topic $topic){
+        return $currenUser->id === $topic->user_id;
+    }
 }
