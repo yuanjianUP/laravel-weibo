@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\TopicRequest;
 use App\Http\Resources\TopicResource;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Illuminate\Http\Request;
 use App\Models\Topic;
 
@@ -40,5 +41,12 @@ class TopicsController extends Controller
             ->orderByDesc($order)
             ->paginate();
         return TopicResource::collection($topics);
+    }
+
+    public function show(Topic $topic){
+        $query = $topic->query();
+        $topics = $query->with(['user','category'])
+            ->findOrFail($topic->id);
+        return new TopicResource($topics);
     }
 }
